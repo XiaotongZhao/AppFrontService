@@ -11,7 +11,7 @@
 import axios, { AxiosError } from 'axios';
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, CancelToken } from 'axios';
 
-export class Client {
+export class apiClient {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -312,6 +312,8 @@ export class Test implements ITest {
     lastModifyOn?: Date | undefined;
     isDeleted?: boolean;
     name?: string | undefined;
+    age?: number;
+    address?: string | undefined;
 
     constructor(data?: ITest) {
         if (data) {
@@ -329,6 +331,8 @@ export class Test implements ITest {
             this.lastModifyOn = _data["lastModifyOn"] ? new Date(_data["lastModifyOn"].toString()) : <any>undefined;
             this.isDeleted = _data["isDeleted"];
             this.name = _data["name"];
+            this.age = _data["age"];
+            this.address = _data["address"];
         }
     }
 
@@ -346,6 +350,8 @@ export class Test implements ITest {
         data["lastModifyOn"] = this.lastModifyOn ? this.lastModifyOn.toISOString() : <any>undefined;
         data["isDeleted"] = this.isDeleted;
         data["name"] = this.name;
+        data["age"] = this.age;
+        data["address"] = this.address;
         return data;
     }
 }
@@ -356,6 +362,8 @@ export interface ITest {
     lastModifyOn?: Date | undefined;
     isDeleted?: boolean;
     name?: string | undefined;
+    age?: number;
+    address?: string | undefined;
 }
 
 export class ApiException extends Error {

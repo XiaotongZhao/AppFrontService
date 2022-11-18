@@ -10,7 +10,7 @@
   },
   "codeGenerators": {
     "openApiToTypeScriptClient": {
-      "className": "{controller}Client",
+      "className": "apiClient",
       "moduleName": "",
       "namespace": "",
       "typeScriptVersion": 4.3,
@@ -69,7 +69,7 @@
       "enumNameGeneratorType": null,
       "serviceHost": null,
       "serviceSchemes": null,
-      "output": "../src/api/service-proxies.ts",
+      "output": "src/api/service-proxies.ts",
       "newLineBehavior": "Auto"
     }
   }
