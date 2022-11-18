@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import './index.css';
 import { Layout, Menu } from 'antd';
 import { Outlet, Link } from "react-router-dom";
 
