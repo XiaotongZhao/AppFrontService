@@ -22,7 +22,8 @@
     "web-vitals": "^2.1.0"
   },
   "scripts": {
-    "start": "react-scripts start .env.development",
+    "start": "react-scripts start",
+    "dev": "npm start : .env.development",
     "build": "react-scripts build",
     "refresh": "node_modules\\.bin\\nswag run"
   },
