@@ -248,16 +248,21 @@ export class apiClient {
     }
 
     /**
+     * @param body (optional) 
      * @return Success
      */
-    getTestList(  cancelToken?: CancelToken | undefined): Promise<Test[]> {
-        let url_ = this.baseUrl + "/api/Test/GetTestListAsync";
+    getTestList(body: SeachModel | undefined , cancelToken?: CancelToken | undefined): Promise<TestDataSource> {
+        let url_ = this.baseUrl + "/api/Test/GetTestList";
         url_ = url_.replace(/[?&]$/, "");
 
+        const content_ = JSON.stringify(body);
+
         let options_: AxiosRequestConfig = {
-            method: "GET",
+            data: content_,
+            method: "POST",
             url: url_,
             headers: {
+                "Content-Type": "application/json",
                 "Accept": "text/plain"
             },
             cancelToken
@@ -274,7 +279,7 @@ export class apiClient {
         });
     }
 
-    protected processGetTestList(response: AxiosResponse): Promise<Test[]> {
+    protected processGetTestList(response: AxiosResponse): Promise<TestDataSource> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -288,22 +293,59 @@ export class apiClient {
             const _responseText = response.data;
             let result200: any = null;
             let resultData200  = _responseText;
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(Test.fromJS(item));
-            }
-            else {
-                result200 = <any>null;
-            }
-            return Promise.resolve<Test[]>(result200);
+            result200 = TestDataSource.fromJS(resultData200);
+            return Promise.resolve<TestDataSource>(result200);
 
         } else if (status !== 200 && status !== 204) {
             const _responseText = response.data;
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-        return Promise.resolve<Test[]>(null as any);
+        return Promise.resolve<TestDataSource>(null as any);
     }
+}
+
+export class SeachModel implements ISeachModel {
+    skip?: number;
+    size?: number;
+    keyword?: string | undefined;
+
+    constructor(data?: ISeachModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.skip = _data["skip"];
+            this.size = _data["size"];
+            this.keyword = _data["keyword"];
+        }
+    }
+
+    static fromJS(data: any): SeachModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new SeachModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["skip"] = this.skip;
+        data["size"] = this.size;
+        data["keyword"] = this.keyword;
+        return data;
+    }
+}
+
+export interface ISeachModel {
+    skip?: number;
+    size?: number;
+    keyword?: string | undefined;
 }
 
 export class Test implements ITest {
@@ -364,6 +406,54 @@ export interface ITest {
     name?: string | undefined;
     age?: number;
     address?: string | undefined;
+}
+
+export class TestDataSource implements ITestDataSource {
+    data?: Test[] | undefined;
+    count?: number;
+
+    constructor(data?: ITestDataSource) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["data"])) {
+                this.data = [] as any;
+                for (let item of _data["data"])
+                    this.data!.push(Test.fromJS(item));
+            }
+            this.count = _data["count"];
+        }
+    }
+
+    static fromJS(data: any): TestDataSource {
+        data = typeof data === 'object' ? data : {};
+        let result = new TestDataSource();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.data)) {
+            data["data"] = [];
+            for (let item of this.data)
+                data["data"].push(item.toJSON());
+        }
+        data["count"] = this.count;
+        return data;
+    }
+}
+
+export interface ITestDataSource {
+    data?: Test[] | undefined;
+    count?: number;
 }
 
 export class ApiException extends Error {
