@@ -302,6 +302,62 @@ export class apiClient {
         }
         return Promise.resolve<TestDataSource>(null as any);
     }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    findTest(id: number | undefined , cancelToken?: CancelToken | undefined): Promise<Test> {
+        let url_ = this.baseUrl + "/api/Test/FindTest?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "text/plain"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processFindTest(_response);
+        });
+    }
+
+    protected processFindTest(response: AxiosResponse): Promise<Test> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = Test.fromJS(resultData200);
+            return Promise.resolve<Test>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<Test>(null as any);
+    }
 }
 
 export class SeachModel implements ISeachModel {
