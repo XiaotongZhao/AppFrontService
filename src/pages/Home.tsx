@@ -1,7 +1,5 @@
 import { Breadcrumb, Layout } from 'antd';
-import React from 'react';
 import { Input, Space, Table, Button, Modal, Col, Row, Form, InputNumber, message } from 'antd';
-import type { FormInstance } from 'antd/es/form';
 import { apiClient, Test, SeachModel } from '../api/service-proxies';
 import { useState, useEffect } from 'react';
 const { Search } = Input;
