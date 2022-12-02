@@ -15,9 +15,6 @@ function Home() {
   const [seachModel, SetSearchModel] = useState(new SeachModel({ skip: skip, size: size, keyword: "" }));
   const [messageApi, contextHolder] = message.useMessage();
 
-  const [age, setAge] = useState(0);
-  const [name, setName] = useState("");
-  const [address, setAddress] = useState("");
   const [test, setTest] = useState(new Test());
   const [form] = Form.useForm();
 
@@ -37,11 +34,11 @@ function Home() {
     });
   };
 
-  const onFinish = async () => {
-    test.age = age;
-    test.name = name;
-    test.address = address;
-
+  const onFinish = async (event: Test) => {
+    test.age = event.age;
+    test.name = event.name;
+    test.address = event.address;
+    test.country = event.country;
     let res = false;
     if (test.id === 0) {
       res = await client.addTest(test);
@@ -61,17 +58,27 @@ function Home() {
     console.log('Failed:', errorInfo);
   };
 
+  const deleteTest = async (id: number) => {
+    let res = await client.deleteTest(id);
+    if (res === true) {
+      success();
+    } else {
+      warning();
+    }
+    onSearch("");
+  }
+
 
   const editDetail = async (id: number) => {
     setIsModalOpen(true);
     let test = await client.findTest(id);
     setTest(test);
-    form.setFieldsValue({ name: test.name, age: test.age, address: test.address })
+    form.setFieldsValue({ name: test.name, age: test.age, address: test.address, country: test.country })
   };
 
   const showModal = () => {
     setTest(new Test());
-    form.setFieldsValue({ name: "", age: null, address: "" })
+    form.setFieldsValue({ name: "", age: null, address: "", country: "" })
     setIsModalOpen(true);
   };
 
@@ -79,9 +86,6 @@ function Home() {
   };
 
   const handleCancel = () => {
-    console.log(age);
-    console.log(name);
-    console.log(address);
     setIsModalOpen(false);
   };
 
@@ -127,13 +131,26 @@ function Home() {
       key: 'address',
     },
     {
+      title: 'Country',
+      dataIndex: 'country',
+      key: 'country',
+    },
+
+    {
       title: 'operation',
       dataIndex: 'operation',
       render: (_: any, record: Test) => {
         return (
-          <Button type="primary" onClick={() => editDetail(record.id as number)} ghost>
-            Detail
-          </Button>
+          <>
+            <Space>
+              <Button type="primary" onClick={() => editDetail(record.id as number)} ghost>
+                Detail
+              </Button>
+              <Button onClick={() => deleteTest(record.id as number)} danger>
+                Delete
+              </Button>
+            </Space>
+          </>
         )
       },
     }
@@ -179,21 +196,28 @@ function Home() {
                 name="name"
                 rules={[{ required: true, message: 'Please input your name!' }]}
               >
-                <Input name="name" onChange={(event) => { setName(event.target.value); }} />
+                <Input name="name" />
               </Form.Item>
               <Form.Item
                 label="Age"
                 name="age"
                 rules={[{ required: true, message: 'Please input your age!' }]}
               >
-                <InputNumber name="age" value={age} maxLength={2} onChange={(value) => { setAge(value as number); }} />
+                <InputNumber name="age" />
               </Form.Item>
               <Form.Item
                 label="Address"
                 name="address"
                 rules={[{ required: true, message: 'Please input your address!' }]}
               >
-                <Input name="address" value={address} onChange={(event) => { setAddress(event.target.value); }} />
+                <Input name="address" />
+              </Form.Item>
+              <Form.Item
+                label="Country"
+                name="country"
+                rules={[{ required: true, message: 'Please input your country!' }]}
+              >
+                <Input name="country" />
               </Form.Item>
             </Form>
           </Modal>

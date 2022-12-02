@@ -412,6 +412,7 @@ export class Test implements ITest {
     name?: string | undefined;
     age?: number;
     address?: string | undefined;
+    country?: string | undefined;
 
     constructor(data?: ITest) {
         if (data) {
@@ -431,6 +432,7 @@ export class Test implements ITest {
             this.name = _data["name"];
             this.age = _data["age"];
             this.address = _data["address"];
+            this.country = _data["country"];
         }
     }
 
@@ -450,6 +452,7 @@ export class Test implements ITest {
         data["name"] = this.name;
         data["age"] = this.age;
         data["address"] = this.address;
+        data["country"] = this.country;
         return data;
     }
 }
@@ -462,6 +465,7 @@ export interface ITest {
     name?: string | undefined;
     age?: number;
     address?: string | undefined;
+    country?: string | undefined;
 }
 
 export class TestDataSource implements ITestDataSource {
