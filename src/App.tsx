@@ -19,7 +19,7 @@ const App: React.FC = () => {
           </Menu.Item>
           <Menu.SubMenu title="Sub">
             <Menu.Item>
-              <Link to='/test'>Test</Link>
+              <Link to='/redblacktree'>RedBlackTree</Link>
             </Menu.Item>
           </Menu.SubMenu>
         </Menu>

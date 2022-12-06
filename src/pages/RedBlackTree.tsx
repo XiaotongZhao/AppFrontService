@@ -1,7 +1,7 @@
 import ReactECharts from 'echarts-for-react';
 import { useState } from 'react';
 
-function Test() {
+function RedBlackTree() {
   let echartRef: any;
   let categories = [
     {
@@ -17,11 +17,6 @@ function Test() {
       name: 'D'
     }
   ];
-
-
-  const onChartLegendselectchanged = (event: any) => {
-    console.log("trigger onChartLegendselectchanged")
-  }
 
   let treeNode = {
     nodes: [
@@ -137,11 +132,10 @@ function Test() {
   }
 
   const onEvents = {
-    'click': nodeClick,
-    'legendselectchanged': onChartLegendselectchanged
+    'click': nodeClick
   }
 
   return <ReactECharts ref={(e) => { echartRef = e; }} option={options} style={{ height: '800px', width: '100%' }} onEvents={onEvents} />;
 };
 
-export default Test;
+export default RedBlackTree;
