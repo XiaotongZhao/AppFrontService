@@ -1,7 +1,11 @@
 import ReactECharts from 'echarts-for-react';
 import { useState } from 'react';
+import { algorithmServiceApi } from '../api/algorithmServiceApi';
 
 function RedBlackTree() {
+  let test = process.env.REACT_APP_API_AlgorithmService_URL;
+  let algorithmServiceApiClient = new algorithmServiceApi(process.env.REACT_APP_API_AlgorithmService_URL);
+
   let echartRef: any;
   let categories = [
     {

@@ -1,16 +1,16 @@
 {
-  "runtime": "Net60",
+  "runtime": "Net70",
   "defaultVariables": null,
   "documentGenerator": {
     "fromDocument": {
-      "url": "http://localhost:5050/swagger/v1/swagger.json",
+      "url": "http://localhost:5000/swagger/v1/swagger.json",
       "output": null,
       "newLineBehavior": "Auto"
     }
   },
   "codeGenerators": {
     "openApiToTypeScriptClient": {
-      "className": "apiClient",
+      "className": "algorithmServiceApi",
       "moduleName": "",
       "namespace": "",
       "typeScriptVersion": 4.3,
@@ -69,7 +69,7 @@
       "enumNameGeneratorType": null,
       "serviceHost": null,
       "serviceSchemes": null,
-      "output": "src/api/service-proxies.ts",
+      "output": "src/api/algorithmServiceApi.ts",
       "newLineBehavior": "Auto"
     }
   }

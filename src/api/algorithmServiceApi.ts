@@ -11,7 +11,7 @@
 import axios, { AxiosError } from 'axios';
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, CancelToken } from 'axios';
 
-export class apiClient {
+export class algorithmServiceApi {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -25,63 +25,11 @@ export class apiClient {
     }
 
     /**
-     * @return Success
-     */
-    anonymous(  cancelToken?: CancelToken | undefined): Promise<string> {
-        let url_ = this.baseUrl + "/";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_: AxiosRequestConfig = {
-            method: "GET",
-            url: url_,
-            headers: {
-                "Accept": "text/plain"
-            },
-            cancelToken
-        };
-
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
-            return this.processAnonymous(_response);
-        });
-    }
-
-    protected processAnonymous(response: AxiosResponse): Promise<string> {
-        const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (let k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
-        if (status === 200) {
-            const _responseText = response.data;
-            let result200: any = null;
-            let resultData200  = _responseText;
-                result200 = resultData200 !== undefined ? resultData200 : <any>null;
-    
-            return Promise.resolve<string>(result200);
-
-        } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-        }
-        return Promise.resolve<string>(null as any);
-    }
-
-    /**
      * @param body (optional) 
      * @return Success
      */
-    addTest(body: Test | undefined , cancelToken?: CancelToken | undefined): Promise<boolean> {
-        let url_ = this.baseUrl + "/api/Test/AddTest";
+    quickSort(body: number[] | undefined , cancelToken?: CancelToken | undefined): Promise<QuickSortData[][]> {
+        let url_ = this.baseUrl + "/api/Algorithms/QuickSort";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(body);
@@ -104,11 +52,11 @@ export class apiClient {
                 throw _error;
             }
         }).then((_response: AxiosResponse) => {
-            return this.processAddTest(_response);
+            return this.processQuickSort(_response);
         });
     }
 
-    protected processAddTest(response: AxiosResponse): Promise<boolean> {
+    protected processQuickSort(response: AxiosResponse): Promise<QuickSortData[][]> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -122,23 +70,34 @@ export class apiClient {
             const _responseText = response.data;
             let result200: any = null;
             let resultData200  = _responseText;
-                result200 = resultData200 !== undefined ? resultData200 : <any>null;
-    
-            return Promise.resolve<boolean>(result200);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(item);
+            }
+            else {
+                result200 = <any>null;
+            }
+            return Promise.resolve<QuickSortData[][]>(result200);
 
         } else if (status !== 200 && status !== 204) {
             const _responseText = response.data;
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-        return Promise.resolve<boolean>(null as any);
+        return Promise.resolve<QuickSortData[][]>(null as any);
     }
 
     /**
+     * @param n (optional) 
      * @param body (optional) 
      * @return Success
      */
-    updateTest(body: Test | undefined , cancelToken?: CancelToken | undefined): Promise<boolean> {
-        let url_ = this.baseUrl + "/api/Test/UpdateTest";
+    dynamicPlanningFromTopToBottom(n: number | undefined, body: number[] | undefined , cancelToken?: CancelToken | undefined): Promise<number> {
+        let url_ = this.baseUrl + "/api/Algorithms/DynamicPlanningFromTopToBottom?";
+        if (n === null)
+            throw new Error("The parameter 'n' cannot be null.");
+        else if (n !== undefined)
+            url_ += "n=" + encodeURIComponent("" + n) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(body);
@@ -161,11 +120,11 @@ export class apiClient {
                 throw _error;
             }
         }).then((_response: AxiosResponse) => {
-            return this.processUpdateTest(_response);
+            return this.processDynamicPlanningFromTopToBottom(_response);
         });
     }
 
-    protected processUpdateTest(response: AxiosResponse): Promise<boolean> {
+    protected processDynamicPlanningFromTopToBottom(response: AxiosResponse): Promise<number> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -181,78 +140,26 @@ export class apiClient {
             let resultData200  = _responseText;
                 result200 = resultData200 !== undefined ? resultData200 : <any>null;
     
-            return Promise.resolve<boolean>(result200);
+            return Promise.resolve<number>(result200);
 
         } else if (status !== 200 && status !== 204) {
             const _responseText = response.data;
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-        return Promise.resolve<boolean>(null as any);
+        return Promise.resolve<number>(null as any);
     }
 
     /**
-     * @param id (optional) 
-     * @return Success
-     */
-    deleteTest(id: number | undefined , cancelToken?: CancelToken | undefined): Promise<boolean> {
-        let url_ = this.baseUrl + "/api/Test/DeleteTest?";
-        if (id === null)
-            throw new Error("The parameter 'id' cannot be null.");
-        else if (id !== undefined)
-            url_ += "id=" + encodeURIComponent("" + id) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_: AxiosRequestConfig = {
-            method: "POST",
-            url: url_,
-            headers: {
-                "Accept": "text/plain"
-            },
-            cancelToken
-        };
-
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
-            return this.processDeleteTest(_response);
-        });
-    }
-
-    protected processDeleteTest(response: AxiosResponse): Promise<boolean> {
-        const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (let k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
-        if (status === 200) {
-            const _responseText = response.data;
-            let result200: any = null;
-            let resultData200  = _responseText;
-                result200 = resultData200 !== undefined ? resultData200 : <any>null;
-    
-            return Promise.resolve<boolean>(result200);
-
-        } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-        }
-        return Promise.resolve<boolean>(null as any);
-    }
-
-    /**
+     * @param n (optional) 
      * @param body (optional) 
      * @return Success
      */
-    getTestList(body: SeachModel | undefined , cancelToken?: CancelToken | undefined): Promise<TestDataSource> {
-        let url_ = this.baseUrl + "/api/Test/GetTestList";
+    dynamicPlanningFromBottomToTop(n: number | undefined, body: number[] | undefined , cancelToken?: CancelToken | undefined): Promise<number> {
+        let url_ = this.baseUrl + "/api/Algorithms/DynamicPlanningFromBottomToTop?";
+        if (n === null)
+            throw new Error("The parameter 'n' cannot be null.");
+        else if (n !== undefined)
+            url_ += "n=" + encodeURIComponent("" + n) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(body);
@@ -275,11 +182,11 @@ export class apiClient {
                 throw _error;
             }
         }).then((_response: AxiosResponse) => {
-            return this.processGetTestList(_response);
+            return this.processDynamicPlanningFromBottomToTop(_response);
         });
     }
 
-    protected processGetTestList(response: AxiosResponse): Promise<TestDataSource> {
+    protected processDynamicPlanningFromBottomToTop(response: AxiosResponse): Promise<number> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -293,32 +200,33 @@ export class apiClient {
             const _responseText = response.data;
             let result200: any = null;
             let resultData200  = _responseText;
-            result200 = TestDataSource.fromJS(resultData200);
-            return Promise.resolve<TestDataSource>(result200);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return Promise.resolve<number>(result200);
 
         } else if (status !== 200 && status !== 204) {
             const _responseText = response.data;
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-        return Promise.resolve<TestDataSource>(null as any);
+        return Promise.resolve<number>(null as any);
     }
 
     /**
-     * @param id (optional) 
+     * @param body (optional) 
      * @return Success
      */
-    findTest(id: number | undefined , cancelToken?: CancelToken | undefined): Promise<Test> {
-        let url_ = this.baseUrl + "/api/Test/FindTest?";
-        if (id === null)
-            throw new Error("The parameter 'id' cannot be null.");
-        else if (id !== undefined)
-            url_ += "id=" + encodeURIComponent("" + id) + "&";
+    createRedBlackTree(body: number[] | undefined , cancelToken?: CancelToken | undefined): Promise<RedBlackTreeModel> {
+        let url_ = this.baseUrl + "/api/Algorithms/CreateRedBlackTree";
         url_ = url_.replace(/[?&]$/, "");
 
+        const content_ = JSON.stringify(body);
+
         let options_: AxiosRequestConfig = {
-            method: "GET",
+            data: content_,
+            method: "POST",
             url: url_,
             headers: {
+                "Content-Type": "application/json",
                 "Accept": "text/plain"
             },
             cancelToken
@@ -331,11 +239,11 @@ export class apiClient {
                 throw _error;
             }
         }).then((_response: AxiosResponse) => {
-            return this.processFindTest(_response);
+            return this.processCreateRedBlackTree(_response);
         });
     }
 
-    protected processFindTest(response: AxiosResponse): Promise<Test> {
+    protected processCreateRedBlackTree(response: AxiosResponse): Promise<RedBlackTreeModel> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -349,23 +257,22 @@ export class apiClient {
             const _responseText = response.data;
             let result200: any = null;
             let resultData200  = _responseText;
-            result200 = Test.fromJS(resultData200);
-            return Promise.resolve<Test>(result200);
+            result200 = RedBlackTreeModel.fromJS(resultData200);
+            return Promise.resolve<RedBlackTreeModel>(result200);
 
         } else if (status !== 200 && status !== 204) {
             const _responseText = response.data;
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-        return Promise.resolve<Test>(null as any);
+        return Promise.resolve<RedBlackTreeModel>(null as any);
     }
 }
 
-export class SeachModel implements ISeachModel {
-    skip?: number;
-    size?: number;
-    keyword?: string | undefined;
+export class Link implements ILink {
+    source?: number;
+    target?: number;
 
-    constructor(data?: ISeachModel) {
+    constructor(data?: ILink) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -376,45 +283,41 @@ export class SeachModel implements ISeachModel {
 
     init(_data?: any) {
         if (_data) {
-            this.skip = _data["skip"];
-            this.size = _data["size"];
-            this.keyword = _data["keyword"];
+            this.source = _data["source"];
+            this.target = _data["target"];
         }
     }
 
-    static fromJS(data: any): SeachModel {
+    static fromJS(data: any): Link {
         data = typeof data === 'object' ? data : {};
-        let result = new SeachModel();
+        let result = new Link();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["skip"] = this.skip;
-        data["size"] = this.size;
-        data["keyword"] = this.keyword;
+        data["source"] = this.source;
+        data["target"] = this.target;
         return data;
     }
 }
 
-export interface ISeachModel {
-    skip?: number;
-    size?: number;
-    keyword?: string | undefined;
+export interface ILink {
+    source?: number;
+    target?: number;
 }
 
-export class Test implements ITest {
+export class Node implements INode {
     id?: number;
-    createdOn?: Date | undefined;
-    lastModifyOn?: Date | undefined;
-    isDeleted?: boolean;
     name?: string | undefined;
-    age?: number;
-    address?: string | undefined;
-    country?: string | undefined;
+    value?: number;
+    symbolSize?: number;
+    x?: number;
+    y?: number;
+    category?: number;
 
-    constructor(data?: ITest) {
+    constructor(data?: INode) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -426,19 +329,18 @@ export class Test implements ITest {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
-            this.createdOn = _data["createdOn"] ? new Date(_data["createdOn"].toString()) : <any>undefined;
-            this.lastModifyOn = _data["lastModifyOn"] ? new Date(_data["lastModifyOn"].toString()) : <any>undefined;
-            this.isDeleted = _data["isDeleted"];
             this.name = _data["name"];
-            this.age = _data["age"];
-            this.address = _data["address"];
-            this.country = _data["country"];
+            this.value = _data["value"];
+            this.symbolSize = _data["symbolSize"];
+            this.x = _data["x"];
+            this.y = _data["y"];
+            this.category = _data["category"];
         }
     }
 
-    static fromJS(data: any): Test {
+    static fromJS(data: any): Node {
         data = typeof data === 'object' ? data : {};
-        let result = new Test();
+        let result = new Node();
         result.init(data);
         return result;
     }
@@ -446,33 +348,31 @@ export class Test implements ITest {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["createdOn"] = this.createdOn ? this.createdOn.toISOString() : <any>undefined;
-        data["lastModifyOn"] = this.lastModifyOn ? this.lastModifyOn.toISOString() : <any>undefined;
-        data["isDeleted"] = this.isDeleted;
         data["name"] = this.name;
-        data["age"] = this.age;
-        data["address"] = this.address;
-        data["country"] = this.country;
+        data["value"] = this.value;
+        data["symbolSize"] = this.symbolSize;
+        data["x"] = this.x;
+        data["y"] = this.y;
+        data["category"] = this.category;
         return data;
     }
 }
 
-export interface ITest {
+export interface INode {
     id?: number;
-    createdOn?: Date | undefined;
-    lastModifyOn?: Date | undefined;
-    isDeleted?: boolean;
     name?: string | undefined;
-    age?: number;
-    address?: string | undefined;
-    country?: string | undefined;
+    value?: number;
+    symbolSize?: number;
+    x?: number;
+    y?: number;
+    category?: number;
 }
 
-export class TestDataSource implements ITestDataSource {
-    data?: Test[] | undefined;
-    count?: number;
+export class QuickSortData implements IQuickSortData {
+    change?: boolean;
+    value?: number;
 
-    constructor(data?: ITestDataSource) {
+    constructor(data?: IQuickSortData) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -483,37 +383,85 @@ export class TestDataSource implements ITestDataSource {
 
     init(_data?: any) {
         if (_data) {
-            if (Array.isArray(_data["data"])) {
-                this.data = [] as any;
-                for (let item of _data["data"])
-                    this.data!.push(Test.fromJS(item));
-            }
-            this.count = _data["count"];
+            this.change = _data["change"];
+            this.value = _data["value"];
         }
     }
 
-    static fromJS(data: any): TestDataSource {
+    static fromJS(data: any): QuickSortData {
         data = typeof data === 'object' ? data : {};
-        let result = new TestDataSource();
+        let result = new QuickSortData();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.data)) {
-            data["data"] = [];
-            for (let item of this.data)
-                data["data"].push(item.toJSON());
-        }
-        data["count"] = this.count;
+        data["change"] = this.change;
+        data["value"] = this.value;
         return data;
     }
 }
 
-export interface ITestDataSource {
-    data?: Test[] | undefined;
-    count?: number;
+export interface IQuickSortData {
+    change?: boolean;
+    value?: number;
+}
+
+export class RedBlackTreeModel implements IRedBlackTreeModel {
+    nodes?: Node[] | undefined;
+    links?: Link[] | undefined;
+
+    constructor(data?: IRedBlackTreeModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["nodes"])) {
+                this.nodes = [] as any;
+                for (let item of _data["nodes"])
+                    this.nodes!.push(Node.fromJS(item));
+            }
+            if (Array.isArray(_data["links"])) {
+                this.links = [] as any;
+                for (let item of _data["links"])
+                    this.links!.push(Link.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): RedBlackTreeModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new RedBlackTreeModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.nodes)) {
+            data["nodes"] = [];
+            for (let item of this.nodes)
+                data["nodes"].push(item.toJSON());
+        }
+        if (Array.isArray(this.links)) {
+            data["links"] = [];
+            for (let item of this.links)
+                data["links"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IRedBlackTreeModel {
+    nodes?: Node[] | undefined;
+    links?: Link[] | undefined;
 }
 
 export class ApiException extends Error {

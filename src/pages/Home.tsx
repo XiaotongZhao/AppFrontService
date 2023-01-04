@@ -1,6 +1,6 @@
 import { Breadcrumb, Layout } from 'antd';
 import { Input, Space, Table, Button, Modal, Col, Row, Form, InputNumber, message } from 'antd';
-import { apiClient, Test, SeachModel } from '../api/service-proxies';
+import { appApiClient, Test, SeachModel } from '../api/appApiClient';
 import { useState, useEffect } from 'react';
 const { Search } = Input;
 const { Content } = Layout;
@@ -18,7 +18,7 @@ function Home() {
   const [test, setTest] = useState(new Test());
   const [form] = Form.useForm();
 
-  let client = new apiClient(process.env.REACT_APP_API_BASE_URL);
+  let client = new appApiClient(process.env.REACT_APP_API_BASE_URL);
 
   const success = () => {
     messageApi.open({
