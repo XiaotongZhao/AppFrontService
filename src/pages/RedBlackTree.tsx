@@ -4,6 +4,7 @@ import { algorithmServiceApi } from '../api/algorithmServiceApi';
 
 function RedBlackTree() {
   let test = process.env.REACT_APP_API_AlgorithmService_URL;
+
   let algorithmServiceApiClient = new algorithmServiceApi(process.env.REACT_APP_API_AlgorithmService_URL);
 
   let echartRef: any;
@@ -35,8 +36,8 @@ function RedBlackTree() {
       },
       {
         id: 1,
-        name: '10',
-        value: 10,
+        name: '30',
+        value: 30,
         symbolSize: 50,
         x: 350,
         y: 300,
@@ -44,8 +45,8 @@ function RedBlackTree() {
       },
       {
         id: 2,
-        name: '30',
-        value: 30,
+        name: '15',
+        value: 15,
         symbolSize: 50,
         x: 250,
         y: 300,
@@ -53,10 +54,10 @@ function RedBlackTree() {
       },
       {
         id: 3,
-        name: '15',
-        value: 15,
+        name: '11',
+        value: 11,
         symbolSize: 50,
-        x: 300,
+        x: 200,
         y: 350,
         category: 3
       },
@@ -65,7 +66,7 @@ function RedBlackTree() {
         name: '17',
         value: 17,
         symbolSize: 50,
-        x: 200,
+        x: 300,
         y: 350,
         category: 3
       }
@@ -73,12 +74,13 @@ function RedBlackTree() {
     links: [
       {
         source: 0,
-        target: 1
+        target: 2
       },
       {
         source: 0,
-        target: 2
+        target: 1
       },
+     
       {
         source: 2,
         target: 3
